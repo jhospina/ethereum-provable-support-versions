@@ -11,6 +11,9 @@ This will provide your contract with functions like __`provable_query(...)`__, w
 ## Original Project
 https://github.com/provable-things/ethereum-api/
 
+## Official Documentation
+https://docs.provable.xyz/
+
 ### Compatible versions of Solidity
 * 0.8.X
 
@@ -58,3 +61,10 @@ uint public etherUSD;
 ```
 
 To learn more about the Provable technology, please refer to our __[documentation here](https://docs.provable.xyz/)__.
+
+
+***
+
+### :radioactive: __Warning!:__
+This library has not been sufficiently tested. Use it at your own risk! 
+Any questions and suggestions, please write to me a message
