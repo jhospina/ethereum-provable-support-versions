@@ -1,66 +1,60 @@
 ## Provable Support versions
 
-&nbsp;
+This is a project to give it support  to more versions on solidity.
+
 Thanks to this __Ethereum API__, enriching your smart-contracts with external data using __Provable__ is very easy!
 
 In Solidity it is as simple as inheriting the __`usingProvable`__ contract that you'll find in this repository.
 
 This will provide your contract with functions like __`provable_query(...)`__, which make it trivial for you to leverage our oracle technology straight away.
 
+## Original Project
+https://github.com/provable-things/ethereum-api/
+
+### Compatible versions of Solidity
+* 0.8.X
+
 If you're using the __[Remix IDE](http://remix.ethereum.org)__ it's even easier still - simply import __Provable__ into your contract like so:
+
 
 ```solidity
 
-import "github.com/oraclize/ethereum-api/provableAPI.sol";
+import "github.com/jhospina/ethereum-provable-support-versions/provableAPI_0.8.sol";
 
 ```
 
 
+## Example
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity >= 0.8.0 < 0.9.0;
+import "github.com/jhospina/ethereum-provable-support-versions/provableAPI_0.8.sol";
 
-To learn more about the Provable technology, please refer to our __[documentation here](https://docs.oraclize.it)__.
+contract ETHUSD is usingProvable {
+uint public etherUSD;
 
-&nbsp;
+    constructor () public {
+        etherUSD = 0;
+    }
 
-***
+    // __callback is an overridden function provided by oraclize api
+    // to handle API responses
+    function __callback(bytes32 myid, string memory result) override public {
+        // provable_cbAddress() ensures that the data provided comes from
+        // provable provider, and not anyone could update this data
+        require(msg.sender == provable_cbAddress());
 
-&nbsp;
+        etherUSD = parseInt(result, 2); // Recover 2 decimals
+    }
 
-### :computer: See It In Action!
+    function update() public payable {
+        // provable_query() is the way to query an API from the smart contract
+        // Receives 2 parameters:
+        // 1.- Data source
+        // 2.- Parser helper with data
+        provable_query("URL", "json(https://api.kraken.com/0/public/Ticker?pair=ETHUSD).result.XETHZUSD.c.0");
+    }
+}
+```
 
-For working examples of how to integrate the __Provable__ API into your own smart-contracts, head on over to the __[Provable Ethereum Examples](https://github.com/oraclize/ethereum-examples)__ repository. Here you'll find various examples that use __Provable__ to feed smart-contracts with data from a variety of external sources.
-
-There are even __[some examples here](https://github.com/oraclize/ethereum-examples/tree/master/solidity/truffle-examples)__ showing you how you can use __Provable__ in a local Truffle development environment!
-
-&nbsp;
-
-***
-
-&nbsp;
-
-### :mega: __Get In Touch!__
-
-If you want to ask us something, or tell us something, there's loads of ways to get in touch:
-
-__❍__ We have a __[Twitter](https://twitter.com/provablethings)__
-
-__❍__ And a __[Gitter](https://gitter.im/oraclize/ethereum-api)__
-
-__❍__ Or a __[Website](https://provable.xyz)__
-
-__❍__ Alongside a __[Youtube](https://www.youtube.com/channel/UCjVjCheDbMel-x-JYeGazcQ)__
-
-__❍__ Plus a __[Github](https://github.com/provable-things)__
-
-&nbsp;
-
-***
-
-&nbsp;
-
-### :hourglass_flowing_sand: __Notice about Oraclize rebranding to Provable:__
-
-Please use the __`provableAPI_0.X.sol`__ contracts going forward. We will continue supporting the oraclize-named versions for a limited time, but they should be considered deprecated and to be removed in the coming months.
-
-### :radioactive: __A Note Regarding Serpent:__
-
-:skull: __CAUTION__: It is highly recommended to avoid using Serpent, especially in production. The serpent version of the __Provable__ API herein remains for historical reasons but support for it is no longer maintained. Serpent is considered outdated and audits have shown it to be flawed. Use it at your own risk!
+To learn more about the Provable technology, please refer to our __[documentation here](https://docs.provable.xyz/)__.
